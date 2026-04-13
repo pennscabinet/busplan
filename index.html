@@ -266,12 +266,31 @@ function CardShopBusinessPlan() {
   const inv1Status = "active";
   const inv2Status = "planned";
   const inv3Status = "ordered";
+  const inv4Status = "planned";
+
+  // ===== INVESTMENT #4: TCG Accessories =====
+  const sellRateAcc = 0.80;
+  const accItems = [
+    { name: "Ultra Pro 9-pocket binder", cost: 10, sell: 22, ship: 6.50, qty: 3 },
+    { name: "Ultra Pro deck box", cost: 4, sell: 10, ship: 5.30, qty: 5 },
+    { name: "Generic playmat (bulk)", cost: 7.50, sell: 24, ship: 6.50, qty: 3 },
+    { name: "BCW 800ct storage box", cost: 3, sell: 10, ship: 5.30, qty: 4 },
+  ];
+  const accInvestment = accItems.reduce((s, i) => s + i.cost * i.qty, 0);
+  const accTotalUnits = accItems.reduce((s, i) => s + i.qty, 0);
+  const accTotalProfit = accItems.reduce((s, item) => {
+    const p = ebayPayout(item.sell);
+    const profitPer = (p - item.cost - item.ship) * sellRateAcc;
+    return s + profitPer * item.qty;
+  }, 0);
+  const accRoi = (accTotalProfit / accInvestment) * 100;
+  const accProfitable = accTotalProfit > 0;
 
   // Grand totals across ALL investments
-  const grandCapital = boxCost + (shippingCost * packsPerBox) + totalSourceCost + (bundleShipping * bundlesPerCase) + mfbTotalInv;
-  const grandProfitBest = totalProfit + bundleTotalProfit + mfbBestProfit;
-  const grandProfitWorst = totalProfit + bundleTotalProfit + mfbWorstProfit;
-  const grandProfitExpected = totalProfit + bundleTotalProfit + mfbExpectedProfit;
+  const grandCapital = boxCost + (shippingCost * packsPerBox) + totalSourceCost + (bundleShipping * bundlesPerCase) + mfbTotalInv + accInvestment;
+  const grandProfitBest = totalProfit + bundleTotalProfit + mfbBestProfit + accTotalProfit;
+  const grandProfitWorst = totalProfit + bundleTotalProfit + mfbWorstProfit + accTotalProfit;
+  const grandProfitExpected = totalProfit + bundleTotalProfit + mfbExpectedProfit + accTotalProfit;
 
   return (
     <div
@@ -315,7 +334,7 @@ function CardShopBusinessPlan() {
           Card Shop Investment Plan
         </h1>
         <div style={{ fontSize: 13, color: COLORS.muted }}>
-          3 Active Investments · MTG · Pokémon · Supplies
+          4 Investments · MTG · Pokémon · Supplies · Accessories
         </div>
       </div>
 
@@ -336,6 +355,9 @@ function CardShopBusinessPlan() {
           {bundleProfitable ? "✓ INV.2" : "✗ INV.2"}
         </Badge>
         <Badge color={COLORS.green}>✓ INV.3</Badge>
+        <Badge color={accProfitable ? COLORS.green : COLORS.red}>
+          {accProfitable ? "✓ INV.4" : "✗ INV.4"}
+        </Badge>
         <Badge color={COLORS.accent}>
           EXPECTED: +${grandProfitExpected.toFixed(0)}
         </Badge>
@@ -397,7 +419,7 @@ function CardShopBusinessPlan() {
 
         {/* Inv 3: My First Battle */}
         <div style={{
-          padding: "14px 16px", borderRadius: 8,
+          padding: "14px 16px", marginBottom: 10, borderRadius: 8,
           background: COLORS.bg, border: `1px solid ${COLORS.border}`,
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
@@ -411,6 +433,25 @@ function CardShopBusinessPlan() {
           </div>
           <div style={{ fontSize: 12, color: COLORS.muted }}>
             4 boxes ordered from Amazon · Awaiting delivery · Then open, sort & list
+          </div>
+        </div>
+
+        {/* Inv 4: TCG Accessories */}
+        <div style={{
+          padding: "14px 16px", borderRadius: 8,
+          background: COLORS.bg, border: `1px solid ${COLORS.border}`,
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 14 }}>🎨</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.text, fontFamily: "'JetBrains Mono', monospace" }}>
+                Inv. #4 — TCG Accessories
+              </span>
+            </div>
+            <Badge color={COLORS.muted}>PLANNED</Badge>
+          </div>
+          <div style={{ fontSize: 12, color: COLORS.muted }}>
+            Binders, deck boxes, playmats, storage boxes · Low capital, high margin diversification
           </div>
         </div>
       </Section>
@@ -862,11 +903,76 @@ function CardShopBusinessPlan() {
         </div>
       </Section>
 
+      {/* ===== INVESTMENT #4: TCG Accessories ===== */}
+      <Section title="Investment #4 — TCG Accessories" icon="🎨" accent>
+        <div
+          style={{
+            background: COLORS.highlight,
+            borderRadius: 8,
+            padding: "14px 16px",
+            marginBottom: 16,
+            fontSize: 13,
+            color: COLORS.muted,
+            lineHeight: 1.6,
+          }}
+        >
+          Diversify into binders, deck boxes, playmats & storage boxes.
+          Low capital entry (~$100), high margins (30-60%), and natural
+          cross-sell with your existing card buyer audience.
+        </div>
+
+        <h3 style={{ fontSize: 12, color: COLORS.muted, letterSpacing: "0.08em", textTransform: "uppercase", margin: "16px 0 8px" }}>
+          Starter Batch — Product Mix
+        </h3>
+        {accItems.map((item, i) => {
+          const p = ebayPayout(item.sell);
+          const profitPer = p - item.cost - item.ship;
+          const marginPer = (profitPer / item.sell) * 100;
+          return (
+            <div key={`acc-${i}`} style={{
+              padding: "10px 14px", marginBottom: 8, borderRadius: 8,
+              background: COLORS.bg, border: `1px solid ${COLORS.border}`,
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, fontSize: 13, fontFamily: "'JetBrains Mono', monospace" }}>
+                <span style={{ color: COLORS.text }}>{item.name}</span>
+                <span style={{ color: COLORS.accent }}>×{item.qty}</span>
+              </div>
+              <div style={{ display: "flex", gap: 16, fontSize: 12, color: COLORS.muted }}>
+                <span>Cost: ${item.cost}</span>
+                <span>Sell: ${item.sell}</span>
+                <span>Ship: ${item.ship.toFixed(2)}</span>
+                <span style={{ color: COLORS.green }}>+${profitPer.toFixed(2)}/ea ({marginPer.toFixed(0)}%)</span>
+              </div>
+            </div>
+          );
+        })}
+
+        <div style={{ borderTop: `1px solid ${COLORS.border}`, marginTop: 8, paddingTop: 8 }}>
+          <Row label="Total units" value={`${accTotalUnits}`} />
+          <Row label="Total investment" value={`$${accInvestment.toFixed(2)}`} bold />
+          <Row label={`Expected profit (${Math.round(sellRateAcc * 100)}% sell-through)`} value={`+$${accTotalProfit.toFixed(2)}`} bold color={COLORS.green} />
+          <Row label="ROI" value={`+${accRoi.toFixed(1)}%`} color={COLORS.green} />
+        </div>
+
+        <div style={{
+          marginTop: 16, padding: "12px 16px",
+          background: COLORS.bg, borderRadius: 8, border: `1px solid ${COLORS.border}`,
+          fontSize: 13, color: COLORS.muted, lineHeight: 1.7,
+        }}>
+          <div style={{ fontWeight: 600, color: COLORS.text, marginBottom: 4 }}>Why accessories?</div>
+          <div>→ Cross-sell to your existing MFB & MTG single buyers</div>
+          <div>→ Playmats offer 60%+ margins at low buy-in</div>
+          <div>→ Builds on your existing seller's bundle supply chain</div>
+          <div>→ Low risk: $100 starter batch, easy to scale winners</div>
+        </div>
+      </Section>
+
       {/* Grand Totals */}
       <Section title="Grand Totals — All Investments" icon="📊">
         <Row label="Inv. #1 profit (booster box)" value={`${totalProfit >= 0 ? "+" : ""}$${totalProfit.toFixed(2)}`} color={isProfitable ? COLORS.green : COLORS.red} />
         <Row label="Inv. #2 profit (10 bundles)" value={`${bundleTotalProfit >= 0 ? "+" : ""}$${bundleTotalProfit.toFixed(2)}`} color={bundleProfitable ? COLORS.green : COLORS.red} />
         <Row label="Inv. #3 expected (My First Battle)" value={`+$${mfbExpectedProfit.toFixed(2)}`} color={COLORS.green} />
+        <Row label="Inv. #4 expected (accessories)" value={`+$${accTotalProfit.toFixed(2)}`} color={accProfitable ? COLORS.green : COLORS.red} />
         <div style={{ height: 8 }} />
         <Row label="EXPECTED COMBINED PROFIT" value={`+$${grandProfitExpected.toFixed(2)}`} bold color={COLORS.green} />
         <div style={{ height: 4 }} />
@@ -889,6 +995,8 @@ function CardShopBusinessPlan() {
         <div style={{ fontSize: 11, color: COLORS.muted, marginTop: 2 }}>
           Shipping costs come out of revenue, not upfront capital
         </div>
+        <div style={{ fontSize: 12, color: COLORS.muted, letterSpacing: "0.06em", textTransform: "uppercase", margin: "12px 0 8px" }}>Investment #4</div>
+        <Row label="TCG accessories starter batch" value={`$${accInvestment.toFixed(2)}`} />
         <div style={{ height: 8 }} />
         <Row
           label="TOTAL TO RAISE"
@@ -935,6 +1043,14 @@ function CardShopBusinessPlan() {
             → C&S singles prices from TCGPlayer NM market value (Blue
             Border Squirtle adjusted to ~$15 realistic)
           </div>
+          <div style={{ marginBottom: 6 }}>
+            → TCG accessories: 80% sell-through assumed. Shipped via
+            USPS Ground Advantage ($5.30-$6.50 depending on weight).
+          </div>
+          <div>
+            → Accessory prices based on Amazon/distributor sourcing
+            and current eBay market values
+          </div>
         </div>
       </Section>
 
@@ -946,9 +1062,11 @@ function CardShopBusinessPlan() {
             "Source 1000ct cases: Cardboard Gold toploaders, BCW penny sleeves, BCW team bags",
             "Order 4× Pokémon My First Battle from Amazon ($23.76/ea) ✓ ORDERED",
             "Open MFB boxes: break ALL sets for singles & list on eBay",
-            "Create all eBay listings — booster packs, bundles, sealed product, singles",
-            "Ship sealed/bundles via USPS Ground Advantage · singles via eBay Standard Envelope",
+            "Source TCG accessories starter batch: binders, deck boxes, playmats, storage boxes",
+            "Create all eBay listings — packs, bundles, singles, accessories",
+            "Ship sealed/bundles/accessories via USPS Ground Advantage · singles via Standard Envelope",
             "Track actual costs vs. projections in this plan",
+            "Reinvest MFB singles profits into 80/20 MFB/FE split for growth",
           ].map((step, i) => (
             <div key={i} style={{ display: "flex", gap: 10, marginBottom: 2 }}>
               <span style={{ color: COLORS.accent, fontWeight: 600 }}>
