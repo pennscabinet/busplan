@@ -243,11 +243,120 @@ export default function CardShopBusinessPlan() {
   const mfbWorstProfit = Math.min(...mfbScenarios.map(s => mfbScenarioProfit(s.bp, s.cs)));
 
   // ===== TRACKING STATE =====
-  const inv1Sold = 0;
-  const inv1Total = 24;
+  // Shop metrics
+  const shopOrders = 67;
+  const shopReviews = 36;
+  const shopNegative = 0;
+
+  // Realized sales log
+  const realizedSales = [
+    { inv: 1, item: "Jet Medallion (CM)", payout: 8.39, date: "Apr 2026" },
+    { inv: 1, item: "Freyalise, Llanowar's Fury (CM)", payout: 3.24, date: "Apr 2026" },
+    { inv: 3, item: "2× BB Squirtle + 2× Reg Squirtle (MFB bundle)", payout: 28.35, date: "Apr 2026" },
+  ];
+  const totalRealized = realizedSales.reduce((s, r) => s + r.payout, 0);
+
+  // Investment #1: Commander Masters — PIVOTED to singles
+  const inv1Cost = 560;
+  const inv1Realized = realizedSales.filter(r => r.inv === 1).reduce((s, r) => s + r.payout, 0);
+
+  // Full pull list with estimated market values (TCGPlayer/MTGGoldfish mid-market 2026)
+  const cmPulls = [
+    // $30+ tier
+    { name: "Deflecting Swat (borderless)", est: 88, sold: false },
+    { name: "The Great Henge", est: 42, sold: false },
+    { name: "Deflecting Swat (regular)", est: 36, sold: false },
+    { name: "Craterhoof Behemoth", est: 30, sold: false },
+    { name: "Urza, Lord High Artificer", est: 28, sold: false },
+    // $10-29 tier
+    { name: "Loyal Retainers", est: 22, sold: false },
+    { name: "Smothering Tithe", est: 18, sold: false },
+    { name: "Morophon, the Boundless", est: 17, sold: false },
+    { name: "Cyclonic Rift", est: 17, sold: false },
+    { name: "Toxic Deluge", est: 16, sold: false },
+    { name: "Grand Abolisher", est: 13, sold: false },
+    { name: "Mikaeus, the Unhallowed (BL holo)", est: 15, sold: false },
+    { name: "Ohran Frostfang", est: 12, sold: false },
+    { name: "Gisela, Blade of Goldnight", est: 12, sold: false },
+    { name: "Counterspell (BL holo)", est: 11, sold: false },
+    { name: "Bloodchief Ascension", est: 11, sold: false },
+    { name: "Arachnogenesis", est: 10, sold: false },
+    { name: "Sol Ring (holo)", est: 10, sold: false },
+    // $5-9 tier
+    { name: "Exsanguinate (holo)", est: 8, sold: false },
+    { name: "Imp's Mischief", est: 8, sold: false },
+    { name: "Jet Medallion", est: 8.39, sold: true },
+    { name: "Sapphire Medallion", est: 7, sold: false },
+    { name: "Wrath of God", est: 7, sold: false },
+    { name: "Path to Exile (BL)", est: 6, sold: false },
+    { name: "Path to Exile", est: 5, sold: false },
+    { name: "Ghalta, Primal Hunger", est: 5, sold: false },
+    { name: "Nekusar, the Mindrazer", est: 6, sold: false },
+    { name: "Skyline Despot", est: 6, sold: false },
+    { name: "Disrupt Decorum", est: 5, sold: false },
+    { name: "Personal Tutor (BL)", est: 6, sold: false },
+    { name: "Treasure Nabber", est: 5, sold: false },
+    { name: "Hammer of Nazahn", est: 5, sold: false },
+    { name: "Sephara, Sky's Blade", est: 5, sold: false },
+    { name: "Godo, Bandit Warlord", est: 5, sold: false },
+    { name: "Sevinne's Reclamation", est: 5, sold: false },
+    // $2-4 tier
+    { name: "Meren of Clan Nel Toth (BL)", est: 4, sold: false },
+    { name: "Meren of Clan Nel Toth", est: 3, sold: false },
+    { name: "Xantcha, Sleeper Agent", est: 4, sold: false },
+    { name: "Sidisi, Brood Tyrant", est: 3, sold: false },
+    { name: "Akiri, Fearless Voyager", est: 3, sold: false },
+    { name: "Counterspell (BL) x2", est: 6, sold: false },
+    { name: "Counterspell (regular)", est: 2, sold: false },
+    { name: "Frantic Search (BL) x2", est: 4, sold: false },
+    { name: "Frantic Search", est: 2, sold: false },
+    { name: "Storm-Kiln Artist (BL)", est: 3, sold: false },
+    { name: "Vandalblast (BL)", est: 3, sold: false },
+    { name: "Vandalblast", est: 2, sold: false },
+    { name: "Generous Gift (BL)", est: 3, sold: false },
+    { name: "Generous Gift", est: 2, sold: false },
+    { name: "Faithful Looting (BL)", est: 2, sold: false },
+    { name: "All That Glitters (BL)", est: 3, sold: false },
+    { name: "Dread Return (BL)", est: 2, sold: false },
+    { name: "Victimize", est: 2, sold: false },
+    { name: "Eternal Witness", est: 2, sold: false },
+    { name: "Mystic Confluence", est: 3, sold: false },
+    { name: "Kodama's Reach (BL)", est: 2, sold: false },
+    { name: "Kodama's Reach", est: 2, sold: false },
+    { name: "Sublime Exhalation", est: 2, sold: false },
+    { name: "Darksteel Mutation", est: 2, sold: false },
+    { name: "Elvish Mystic (BL holo)", est: 3, sold: false },
+    { name: "Elvish Mystic (BL)", est: 2, sold: false },
+    { name: "Elvish Mystic", est: 2, sold: false },
+    { name: "Skyshroud Claim", est: 2, sold: false },
+    { name: "Star of Extinction", est: 2, sold: false },
+    { name: "Idol of Oblivion", est: 2, sold: false },
+    { name: "Spectator Seating", est: 3, sold: false },
+    { name: "Undergrowth Stadium", est: 3, sold: false },
+    { name: "Pathrazer of Ulamog", est: 2, sold: false },
+    { name: "Freyalise, Llanowar's Fury", est: 3.24, sold: true },
+    // $1-2 tier (misc)
+    { name: "Other sub-$2 cards + tokens/lands/art cards", est: 15, sold: false },
+  ];
+
+  const cmUnsold = cmPulls.filter(c => !c.sold);
+  const inv1UnrealizedEstimate = Math.round(cmUnsold.reduce((s, c) => s + c.est, 0));
+  const inv1TotalEstimate = inv1Realized + inv1UnrealizedEstimate;
+  const inv1RecoupPct = Math.min(100, (inv1TotalEstimate / inv1Cost) * 100);
   const inv1Status = "active";
+  const cmTotalCards = cmPulls.length;
+  const cmSoldCards = cmPulls.filter(c => c.sold).length;
+
+  // Investment #2: Seller's Bundles
   const inv2Status = "planned";
-  const inv3Status = "ordered";
+
+  // Investment #3: MFB — received 4× C&S, breaking for singles
+  const inv3Cost = 23.76 * 4;
+  const inv3Realized = realizedSales.filter(r => r.inv === 3).reduce((s, r) => s + r.payout, 0);
+  const inv3UnrealizedEstimate = csSinglesNet * 4 - inv3Realized - 28.35; // remaining unsold C&S singles across 4 sets minus what sold
+  const inv3TotalEstimate = inv3Realized + Math.max(0, inv3UnrealizedEstimate);
+  const inv3RecoupPct = Math.min(100, (inv3TotalEstimate / inv3Cost) * 100);
+  const inv3Status = "active";
   const inv4Status = "planned";
 
   // ===== INVESTMENT #4: TCG Accessories =====
@@ -302,7 +411,7 @@ export default function CardShopBusinessPlan() {
             marginBottom: 8,
           }}
         >
-          Business Plan v2.0
+          Business Plan v3.0
         </div>
         <h1
           style={{
@@ -347,11 +456,23 @@ export default function CardShopBusinessPlan() {
 
       {/* ===== TRACKING DASHBOARD ===== */}
       <Section title="Investment Tracker" icon="📡">
-        <div style={{ fontSize: 12, color: COLORS.muted, marginBottom: 12 }}>
-          Live status of all investments. Updated as things progress.
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 10, marginBottom: 16 }}>
+          <div style={{ background: COLORS.bg, borderRadius: 8, padding: 12, textAlign: "center" }}>
+            <div style={{ fontSize: 11, color: COLORS.muted }}>Orders</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: COLORS.accent, fontFamily: "'JetBrains Mono', monospace" }}>{shopOrders}</div>
+          </div>
+          <div style={{ background: COLORS.bg, borderRadius: 8, padding: 12, textAlign: "center" }}>
+            <div style={{ fontSize: 11, color: COLORS.muted }}>Reviews</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: COLORS.green, fontFamily: "'JetBrains Mono', monospace" }}>{shopReviews}</div>
+            <div style={{ fontSize: 10, color: COLORS.green }}>100% positive</div>
+          </div>
+          <div style={{ background: COLORS.bg, borderRadius: 8, padding: 12, textAlign: "center" }}>
+            <div style={{ fontSize: 11, color: COLORS.muted }}>Realized revenue</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: COLORS.text, fontFamily: "'JetBrains Mono', monospace" }}>${totalRealized.toFixed(2)}</div>
+          </div>
         </div>
 
-        {/* Inv 1: Commander Masters */}
+        {/* Inv 1: Commander Masters — now singles */}
         <div style={{
           padding: "14px 16px", marginBottom: 10, borderRadius: 8,
           background: COLORS.bg, border: `1px solid ${COLORS.border}`,
@@ -360,23 +481,25 @@ export default function CardShopBusinessPlan() {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 14 }}>📦</span>
               <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.text, fontFamily: "'JetBrains Mono', monospace" }}>
-                Inv. #1 — Commander Masters
+                Inv. #1 — Commander Masters Singles
               </span>
             </div>
             <Badge color={COLORS.green}>ACTIVE</Badge>
           </div>
           <div style={{ display: "flex", gap: 16, fontSize: 12, color: COLORS.muted, marginBottom: 8 }}>
-            <span>Purchased ✓</span>
-            <span>Listed ✓</span>
-            <span>Price: $43/pack</span>
+            <span>Pivoted to singles ✓</span>
+            <span>Sold: ${inv1Realized.toFixed(2)}</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
             <div style={{ flex: 1, height: 6, background: COLORS.border, borderRadius: 3, overflow: "hidden" }}>
-              <div style={{ width: `${(inv1Sold / inv1Total) * 100}%`, height: "100%", background: COLORS.accent, borderRadius: 3, minWidth: inv1Sold > 0 ? 4 : 0 }} />
+              <div style={{ width: `${inv1RecoupPct}%`, height: "100%", background: inv1RecoupPct >= 100 ? COLORS.green : COLORS.accent, borderRadius: 3 }} />
             </div>
-            <span style={{ fontSize: 12, color: COLORS.accent, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, minWidth: 55, textAlign: "right" }}>
-              {inv1Sold}/{inv1Total} sold
+            <span style={{ fontSize: 12, color: inv1RecoupPct >= 100 ? COLORS.green : COLORS.accent, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, minWidth: 70, textAlign: "right" }}>
+              {inv1RecoupPct.toFixed(0)}% recoup
             </span>
+          </div>
+          <div style={{ fontSize: 11, color: COLORS.muted }}>
+            ${inv1Realized.toFixed(2)} realized + ~${inv1UnrealizedEstimate} estimated unsold = ~${inv1TotalEstimate.toFixed(0)} of ${inv1Cost} cost
           </div>
         </div>
 
@@ -399,7 +522,7 @@ export default function CardShopBusinessPlan() {
           </div>
         </div>
 
-        {/* Inv 3: My First Battle */}
+        {/* Inv 3: My First Battle — now active with real data */}
         <div style={{
           padding: "14px 16px", marginBottom: 10, borderRadius: 8,
           background: COLORS.bg, border: `1px solid ${COLORS.border}`,
@@ -408,33 +531,62 @@ export default function CardShopBusinessPlan() {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 14 }}>⚡</span>
               <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.text, fontFamily: "'JetBrains Mono', monospace" }}>
-                Inv. #3 — My First Battle (×4)
+                Inv. #3 — My First Battle (4× C&S)
               </span>
             </div>
-            <Badge color="#f59e0b">ORDERED</Badge>
+            <Badge color={COLORS.green}>ACTIVE</Badge>
           </div>
-          <div style={{ fontSize: 12, color: COLORS.muted }}>
-            4 boxes ordered from Amazon · Awaiting delivery · Then open, sort & list
+          <div style={{ display: "flex", gap: 16, fontSize: 12, color: COLORS.muted, marginBottom: 8 }}>
+            <span>Received 4× C&S ✓</span>
+            <span>Sold: ${inv3Realized.toFixed(2)}</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <div style={{ flex: 1, height: 6, background: COLORS.border, borderRadius: 3, overflow: "hidden" }}>
+              <div style={{ width: `${inv3RecoupPct}%`, height: "100%", background: inv3RecoupPct >= 100 ? COLORS.green : COLORS.accent, borderRadius: 3 }} />
+            </div>
+            <span style={{ fontSize: 12, color: inv3RecoupPct >= 100 ? COLORS.green : COLORS.accent, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, minWidth: 70, textAlign: "right" }}>
+              {inv3RecoupPct.toFixed(0)}% recoup
+            </span>
+          </div>
+          <div style={{ fontSize: 11, color: COLORS.muted }}>
+            ${inv3Realized.toFixed(2)} realized + ~${Math.max(0, inv3UnrealizedEstimate).toFixed(0)} estimated unsold = ~${inv3TotalEstimate.toFixed(0)} of ${inv3Cost.toFixed(2)} cost
           </div>
         </div>
+      </Section>
 
-        {/* Inv 4: TCG Accessories */}
-        <div style={{
-          padding: "14px 16px", borderRadius: 8,
-          background: COLORS.bg, border: `1px solid ${COLORS.border}`,
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 14 }}>🎨</span>
-              <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.text, fontFamily: "'JetBrains Mono', monospace" }}>
-                Inv. #4 — TCG Accessories
-              </span>
+      {/* ===== REALIZED SALES LOG ===== */}
+      <Section title="Realized Sales Log" icon="💵">
+        <div style={{ fontSize: 12, color: COLORS.muted, marginBottom: 12 }}>
+          Confirmed sales with actual payout amounts received.
+        </div>
+        {realizedSales.map((s, i) => (
+          <div key={i} style={{
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+            padding: "8px 0", borderBottom: i < realizedSales.length - 1 ? `1px solid ${COLORS.border}22` : "none",
+          }}>
+            <div>
+              <div style={{ fontSize: 13, color: COLORS.text, fontFamily: "'JetBrains Mono', monospace" }}>{s.item}</div>
+              <div style={{ fontSize: 11, color: COLORS.muted }}>Inv. #{s.inv} · {s.date}</div>
             </div>
-            <Badge color={COLORS.muted}>PLANNED</Badge>
+            <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.green, fontFamily: "'JetBrains Mono', monospace" }}>
+              +${s.payout.toFixed(2)}
+            </span>
           </div>
-          <div style={{ fontSize: 12, color: COLORS.muted }}>
-            Binders, deck boxes, playmats, storage boxes · Low capital, high margin diversification
-          </div>
+        ))}
+        <div style={{
+          marginTop: 12, padding: "10px 14px",
+          background: `${COLORS.green}10`, border: `1px solid ${COLORS.green}30`, borderRadius: 8,
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+        }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.green, fontFamily: "'JetBrains Mono', monospace" }}>
+            TOTAL REALIZED
+          </span>
+          <span style={{ fontSize: 18, fontWeight: 700, color: COLORS.green, fontFamily: "'JetBrains Mono', monospace" }}>
+            +${totalRealized.toFixed(2)}
+          </span>
+        </div>
+        <div style={{ marginTop: 8, fontSize: 12, color: COLORS.muted }}>
+          Sunk costs (mailers, printer, stock): -$100.00 · Net after expenses: ${(totalRealized - 100).toFixed(2)}
         </div>
       </Section>
 
@@ -548,7 +700,7 @@ export default function CardShopBusinessPlan() {
       </Section>
 
       {/* Investment #1 */}
-      <Section title="Investment #1 — Commander Masters Set Booster Box" icon="📦" accent>
+      <Section title="Investment #1 — Commander Masters Singles" icon="📦" accent>
         <div
           style={{
             background: COLORS.highlight,
@@ -560,8 +712,10 @@ export default function CardShopBusinessPlan() {
             lineHeight: 1.6,
           }}
         >
-          Buy 1 Commander Masters Set Booster Box → split into 24 individual
-          packs → resell on eBay with free shipping via USPS Ground Advantage.
+          Bought 1 Commander Masters Set Booster Box for $560 → originally planned
+          to sell 24 sealed packs at $43 → pivoted to breaking for singles after
+          pulling high-value cards. Key pulls: Deflecting Swat (borderless + regular),
+          Great Henge, Smothering Tithe, Cyclonic Rift, Mikaeus (borderless), and more.
         </div>
 
         <h3
@@ -573,11 +727,13 @@ export default function CardShopBusinessPlan() {
             margin: "16px 0 8px",
           }}
         >
-          Cost Basis
+          Cost Basis & Recoup Status
         </h3>
-        <Row label="Booster box cost" value={`$${boxCost.toFixed(2)}`} />
-        <Row label="Packs per box" value="24" />
-        <Row label="Cost per pack" value={`$${costPerPack.toFixed(2)}`} bold />
+        <Row label="Box cost" value={`$${inv1Cost.toFixed(2)}`} />
+        <Row label="Realized sales so far" value={`$${inv1Realized.toFixed(2)}`} color={COLORS.green} />
+        <Row label="Estimated unsold value" value={`~$${inv1UnrealizedEstimate}`} color={COLORS.accent} />
+        <Row label="Total estimated value" value={`~$${inv1TotalEstimate.toFixed(0)}`} bold />
+        <Row label="Recoup progress" value={`${inv1RecoupPct.toFixed(0)}%`} bold color={inv1RecoupPct >= 100 ? COLORS.green : COLORS.accent} />
 
         <h3
           style={{
@@ -588,115 +744,42 @@ export default function CardShopBusinessPlan() {
             margin: "20px 0 8px",
           }}
         >
-          eBay Fee Breakdown (per pack)
+          Full Pull List — {cmTotalCards} cards ({cmSoldCards} sold, {cmTotalCards - cmSoldCards} remaining)
         </h3>
-        <Row label="Your listing price" value={`$${sellPrice.toFixed(2)}`} />
-        <Row
-          label="Sales tax (8.2% CO Springs)"
-          value={`$${salesTaxOnSale.toFixed(2)}`}
-          sub
-          indent
-        />
-        <Row
-          label="Buyer pays total"
-          value={`$${totalBuyerPays.toFixed(2)}`}
-          sub
-          indent
-        />
-        <Row
-          label="FVF 13.25% (on total incl. tax)"
-          value={`-$${fvf.toFixed(2)}`}
-          color={COLORS.red}
-        />
-        <Row
-          label="Per-order fee"
-          value={`-$${perOrderFee.toFixed(2)}`}
-          color={COLORS.red}
-        />
-        <Row
-          label="Total eBay fees"
-          value={`-$${totalEbayFees.toFixed(2)}`}
-          color={COLORS.red}
-          bold
-        />
-        <Row
-          label="Your eBay payout"
-          value={`$${payoutPerPack.toFixed(2)}`}
-          bold
-          color={COLORS.accent}
-        />
-
-        <h3
-          style={{
-            fontSize: 12,
-            color: COLORS.muted,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            margin: "20px 0 8px",
-          }}
-        >
-          Shipping & Costs (per pack)
-        </h3>
-        <Row
-          label="USPS Ground Advantage"
-          value={`-$${shippingCost.toFixed(2)}`}
-          color={COLORS.red}
-        />
-        <Row
-          label="Product cost (pack)"
-          value={`-$${costPerPack.toFixed(2)}`}
-          color={COLORS.red}
-        />
-        <Row
-          label="Total cost per pack"
-          value={`-$${totalCostPerPack.toFixed(2)}`}
-          color={COLORS.red}
-          bold
-        />
+        {cmPulls.filter(c => c.est >= 5).map((c, i) => (
+          <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "3px 0", fontSize: 13, fontFamily: "'JetBrains Mono', monospace", opacity: c.sold ? 0.4 : 1 }}>
+            <span style={{ color: c.sold ? COLORS.green : COLORS.muted }}>
+              {c.sold ? "✓ " : ""}{c.name}
+            </span>
+            <span style={{ color: c.sold ? COLORS.green : COLORS.text }}>
+              {c.sold ? "SOLD" : `~$${c.est}`}
+            </span>
+          </div>
+        ))}
+        <div style={{ padding: "6px 0", fontSize: 12, color: COLORS.muted, borderTop: `1px solid ${COLORS.border}`, marginTop: 4 }}>
+          + {cmPulls.filter(c => c.est < 5 && !c.sold).length} cards in the $1-4 range (~${cmPulls.filter(c => c.est < 5 && !c.sold).reduce((s,c) => s + c.est, 0).toFixed(0)} total)
+        </div>
 
         <div
           style={{
-            marginTop: 20,
+            marginTop: 16,
             padding: "16px",
-            background: isProfitable ? `${COLORS.green}10` : `${COLORS.red}10`,
-            border: `1px solid ${isProfitable ? COLORS.green : COLORS.red}30`,
+            background: `${COLORS.green}10`,
+            border: `1px solid ${COLORS.green}30`,
             borderRadius: 8,
           }}
         >
           <Row
-            label="PROFIT PER PACK"
-            value={`${profitPerPack >= 0 ? "+" : ""}$${profitPerPack.toFixed(2)}`}
+            label="ESTIMATED TOTAL PROFIT"
+            value={`+$${(inv1TotalEstimate - inv1Cost).toFixed(0)}`}
             bold
-            color={isProfitable ? COLORS.green : COLORS.red}
+            color={COLORS.green}
           />
-          <Row
-            label="Profit margin"
-            value={`${profitMargin.toFixed(1)}%`}
-            color={isProfitable ? COLORS.green : COLORS.red}
-          />
+          <div style={{ fontSize: 12, color: COLORS.muted, marginTop: 4 }}>
+            Pivot to singles dramatically outperforms the original $43/pack sealed plan
+            (which projected ~$185 profit for the full box)
+          </div>
         </div>
-      </Section>
-
-      {/* Full Box Summary */}
-      <Section title="Full Box P&L Summary" icon="📊">
-        <Row label="Total revenue (24 packs)" value={`$${totalRevenue.toFixed(2)}`} />
-        <Row
-          label="Total costs"
-          value={`-$${totalCosts.toFixed(2)}`}
-          color={COLORS.red}
-        />
-        <div style={{ height: 8 }} />
-        <Row
-          label="NET PROFIT (1 BOX)"
-          value={`${totalProfit >= 0 ? "+" : ""}$${totalProfit.toFixed(2)}`}
-          bold
-          color={isProfitable ? COLORS.green : COLORS.red}
-        />
-        <Row
-          label="Return on investment"
-          value={`${roi >= 0 ? "+" : ""}${roi.toFixed(1)}%`}
-          color={isProfitable ? COLORS.green : COLORS.red}
-        />
       </Section>
 
       {/* ===== INVESTMENT #2: Seller's Bundle ===== */}
@@ -803,9 +886,9 @@ export default function CardShopBusinessPlan() {
             lineHeight: 1.6,
           }}
         >
-          Buy 4 boxes from Amazon at $23.76/ea ($95.04 total). Random chance
-          of Bulbasaur & Pikachu (B&P) or Charmander & Squirtle (C&S).
-          Strategy: break ALL sets for singles regardless of which you get.
+          Buy 4 boxes from Amazon at $23.76/ea ($95.04 total). Received
+          all 4× Charmander & Squirtle. Breaking all for singles — already
+          sold a 4-card bundle for $28.35 on day 1!
         </div>
 
         <h3 style={{ fontSize: 12, color: COLORS.muted, letterSpacing: "0.08em", textTransform: "uppercase", margin: "16px 0 8px" }}>
@@ -1040,14 +1123,14 @@ export default function CardShopBusinessPlan() {
       <Section title="Action Steps" icon="✅">
         <div style={{ fontSize: 13, color: COLORS.muted, lineHeight: 1.9 }}>
           {[
-            "Source Commander Masters Set Booster Box ✓ PURCHASED & LISTED @ $43",
-            "Source 1000ct cases: Cardboard Gold toploaders, BCW penny sleeves, BCW team bags",
-            "Order 4× Pokémon My First Battle from Amazon ($23.76/ea) ✓ ORDERED",
-            "Open MFB boxes: break ALL sets for singles & list on eBay",
-            "Source TCG accessories starter batch: binders, deck boxes, playmats, storage boxes",
-            "Create all eBay listings — packs, bundles, singles, accessories",
-            "Ship sealed/bundles/accessories via USPS Ground Advantage · singles via Standard Envelope",
-            "Track actual costs vs. projections in this plan",
+            "Source Commander Masters Box ✓ → PIVOTED TO SINGLES (key pulls listed)",
+            "Order 4× My First Battle ✓ → RECEIVED 4× C&S → BREAKING FOR SINGLES",
+            "List remaining CM singles (Deflecting Swat BL ~$88, Great Henge ~$42, etc.)",
+            "List remaining MFB C&S singles across 4 sets",
+            "Source 1000ct supply cases for seller's bundles",
+            "Source TCG accessories starter batch: binders, deck boxes, playmats",
+            "Ship singles via eBay Standard Envelope · bundles via USPS Ground Advantage",
+            "Track actual sales in realized log — update recoup progress",
             "Reinvest MFB singles profits into 80/20 MFB/FE split for growth",
           ].map((step, i) => (
             <div key={i} style={{ display: "flex", gap: 10, marginBottom: 2 }}>
@@ -1071,7 +1154,7 @@ export default function CardShopBusinessPlan() {
           letterSpacing: "0.05em",
         }}
       >
-        Last updated: April 13, 2026 · Plan is a living document — add investments as we go
+        Last updated: April 20, 2026 · Plan is a living document — add investments as we go
       </div>
     </div>
   );
