@@ -244,15 +244,20 @@ export default function CardShopBusinessPlan() {
 
   // ===== TRACKING STATE =====
   // Shop metrics
-  const shopOrders = 67;
-  const shopReviews = 36;
+  const shopOrders = 75;
+  const shopReviews = 40;
   const shopNegative = 0;
 
-  // Realized sales log
+  // Realized sales log — all figures are ACTUAL PAYOUTS (after eBay fees + shipping)
   const realizedSales = [
     { inv: 1, item: "Jet Medallion (CM)", payout: 8.39, date: "Apr 2026" },
     { inv: 1, item: "Freyalise, Llanowar's Fury (CM)", payout: 3.24, date: "Apr 2026" },
     { inv: 3, item: "2× BB Squirtle + 2× Reg Squirtle (MFB bundle)", payout: 28.35, date: "Apr 2026" },
+    { inv: 0, item: "Pokémon Ranger Steam Siege", payout: 3.66, date: "Apr 2026" },
+    { inv: 1, item: "Cyclonic Rift (CM)", payout: 21.93, date: "Apr 2026" },
+    { inv: 3, item: "Blue Border Charmander (MFB)", payout: 7.45, date: "Apr 2026" },
+    { inv: 3, item: "Reg Border Charmander (MFB)", payout: 4.11, date: "Apr 2026" },
+    { inv: 1, item: "Grand Abolisher (CM)", payout: 12.60, date: "Apr 2026" },
   ];
   const totalRealized = realizedSales.reduce((s, r) => s + r.payout, 0);
 
@@ -272,9 +277,9 @@ export default function CardShopBusinessPlan() {
     { name: "Loyal Retainers", est: 22, sold: false },
     { name: "Smothering Tithe", est: 18, sold: false },
     { name: "Morophon, the Boundless", est: 17, sold: false },
-    { name: "Cyclonic Rift", est: 17, sold: false },
+    { name: "Cyclonic Rift", est: 17, sold: true },
     { name: "Toxic Deluge", est: 16, sold: false },
-    { name: "Grand Abolisher", est: 13, sold: false },
+    { name: "Grand Abolisher", est: 13, sold: true },
     { name: "Mikaeus, the Unhallowed (BL holo)", est: 15, sold: false },
     { name: "Ohran Frostfang", est: 12, sold: false },
     { name: "Gisela, Blade of Goldnight", est: 12, sold: false },
@@ -1154,7 +1159,7 @@ export default function CardShopBusinessPlan() {
           letterSpacing: "0.05em",
         }}
       >
-        Last updated: April 20, 2026 · Plan is a living document — add investments as we go
+        Last updated: April 22, 2026 · Plan is a living document — add investments as we go
       </div>
     </div>
   );
