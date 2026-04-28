@@ -244,8 +244,8 @@ export default function CardShopBusinessPlan() {
 
   // ===== TRACKING STATE =====
   // Shop metrics
-  const shopOrders = 75;
-  const shopReviews = 40;
+  const shopOrders = 93;
+  const shopReviews = 50;
   const shopNegative = 0;
 
   // Realized sales log — all figures are ACTUAL PAYOUTS (after eBay fees + shipping)
@@ -258,6 +258,28 @@ export default function CardShopBusinessPlan() {
     { inv: 3, item: "Blue Border Charmander (MFB)", payout: 7.45, date: "Apr 2026" },
     { inv: 3, item: "Reg Border Charmander (MFB)", payout: 4.11, date: "Apr 2026" },
     { inv: 1, item: "Grand Abolisher (CM)", payout: 12.60, date: "Apr 2026" },
+    { inv: 3, item: "Reg Border Charmander (MFB)", payout: 4.11, date: "Apr 2026" },
+    { inv: 3, item: "Blue Border Charmander (MFB)", payout: 7.45, date: "Apr 2026" },
+    { inv: 1, item: "Sapphire Medallion (CM)", payout: 4.10, date: "Apr 2026" },
+    { inv: 3, item: "MFB Vulpix", payout: 1.54, date: "Apr 2026" },
+    { inv: 1, item: "Storm-Kiln Artist (CM)", payout: 1.10, date: "Apr 2026" },
+    { inv: 0, item: "Jidoor, Aristocratic Capital (FF MTG)", payout: 0.46, date: "Apr 2026" },
+    { inv: 1, item: "Imp's Mischief (CM)", payout: 4.53, date: "Apr 2026" },
+    { inv: 0, item: "To The Crystal Tower (FF MTG)", payout: 1.97, date: "Apr 2026" },
+    { inv: 3, item: "Blue Border Charmander (MFB)", payout: 7.41, date: "Apr 2026" },
+    { inv: 3, item: "MFB Charmeleon", payout: 0.89, date: "Apr 2026" },
+    { inv: 3, item: "MFB Vulpix", payout: 1.52, date: "Apr 2026" },
+    { inv: 0, item: "Liliana, Death's Majesty (FJ)", payout: 0.48, date: "Apr 2026" },
+    { inv: 3, item: "MFB Growlithe", payout: 1.32, date: "Apr 2026" },
+    { inv: 1, item: "Storm-Kiln Artist Borderless (CM)", payout: 2.37, date: "Apr 2026" },
+    { inv: 3, item: "MFB Gyarados", payout: 2.38, date: "Apr 2026" },
+    { inv: 3, item: "MFB Ninetales", payout: 3.24, date: "Apr 2026" },
+    { inv: 3, item: "MFB Magikarp (×3)", payout: 21.96, date: "Apr 2026" },
+    { inv: 1, item: "Morophon, The Boundless (CM)", payout: 4.97, date: "Apr 2026" },
+    { inv: 3, item: "MFB Arcanine", payout: 5.83, date: "Apr 2026" },
+    { inv: 3, item: "BB Squirtle + Reg Squirtle (MFB bundle)", payout: 21.74, date: "Apr 2026" },
+    { inv: 3, item: "MFB Arcanine", payout: 4.93, date: "Apr 2026" },
+    { inv: 3, item: "MFB Gyarados", payout: 2.37, date: "Apr 2026" },
   ];
   const totalRealized = realizedSales.reduce((s, r) => s + r.payout, 0);
 
@@ -276,7 +298,7 @@ export default function CardShopBusinessPlan() {
     // $10-29 tier
     { name: "Loyal Retainers", est: 22, sold: false },
     { name: "Smothering Tithe", est: 18, sold: false },
-    { name: "Morophon, the Boundless", est: 17, sold: false },
+    { name: "Morophon, the Boundless", est: 17, sold: true },
     { name: "Cyclonic Rift", est: 17, sold: true },
     { name: "Toxic Deluge", est: 16, sold: false },
     { name: "Grand Abolisher", est: 13, sold: true },
@@ -289,9 +311,9 @@ export default function CardShopBusinessPlan() {
     { name: "Sol Ring (holo)", est: 10, sold: false },
     // $5-9 tier
     { name: "Exsanguinate (holo)", est: 8, sold: false },
-    { name: "Imp's Mischief", est: 8, sold: false },
+    { name: "Imp's Mischief", est: 8, sold: true },
     { name: "Jet Medallion", est: 8.39, sold: true },
-    { name: "Sapphire Medallion", est: 7, sold: false },
+    { name: "Sapphire Medallion", est: 7, sold: true },
     { name: "Wrath of God", est: 7, sold: false },
     { name: "Path to Exile (BL)", est: 6, sold: false },
     { name: "Path to Exile", est: 5, sold: false },
@@ -315,7 +337,7 @@ export default function CardShopBusinessPlan() {
     { name: "Counterspell (regular)", est: 2, sold: false },
     { name: "Frantic Search (BL) x2", est: 4, sold: false },
     { name: "Frantic Search", est: 2, sold: false },
-    { name: "Storm-Kiln Artist (BL)", est: 3, sold: false },
+    { name: "Storm-Kiln Artist (BL)", est: 3, sold: true },
     { name: "Vandalblast (BL)", est: 3, sold: false },
     { name: "Vandalblast", est: 2, sold: false },
     { name: "Generous Gift (BL)", est: 3, sold: false },
@@ -1159,7 +1181,7 @@ export default function CardShopBusinessPlan() {
           letterSpacing: "0.05em",
         }}
       >
-        Last updated: April 22, 2026 · Plan is a living document — add investments as we go
+        Last updated: April 28, 2026 · Plan is a living document — add investments as we go
       </div>
     </div>
   );
